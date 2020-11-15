@@ -1,0 +1,22 @@
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 420px;
+
+  .header-logo-box {
+    position: absolute;
+    width: 100%;
+    z-index: -1;
+    .logo-img {
+      width: 100%;
+    }
+  }
+}
+main {
+  position: absolute;
+  background-color: white;
+  margin-top: 420px;
+  height: 1000px;
+  width: 100%;
+}
