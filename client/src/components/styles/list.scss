@@ -1,0 +1,31 @@
+.todo-list {
+    list-style: none;
+    width: 55%;
+    margin: 0;
+
+    padding: 0;
+    .todo-list-item {
+        margin-top: 15px;
+        height: 320px;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        font-size: 2.5rem;
+        color: #797979;
+        background-color: white;
+        border-radius: 15px;
+        border: 1px solid #f1ecec;
+        span {
+        }
+        .check-btn {
+            &:hover {
+                color: #81b9bf;
+            }
+        }
+        .remove-btn {
+            &:hover {
+                color: rgb(255, 107, 107);
+            }
+        }
+    }
+}

@@ -1,0 +1,37 @@
+.top-nav {
+    height: 420px;
+    width: 100%;
+    //top: 348.9px; //상단 로고 420px - 타이틀 71.1
+    display: flex;
+    align-items: flex-end;
+    .nav-bottom {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        .nav-bottom-left {
+            display: flex;
+            align-items: center;
+            img {
+                width: 320px;
+            }
+            span {
+                color: gray;
+                font-weight: 900;
+                font-size: 2rem;
+            }
+        }
+        .nav-bottom-right {
+            display: flex;
+            align-items: center;
+            i {
+                margin-right: 15px;
+                font-size: 2rem;
+            }
+        }
+    }
+    .add-btn {
+        position: fixed;
+        bottom: 0;
+        font-size: 2rem;
+    }
+}
