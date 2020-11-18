@@ -15,17 +15,25 @@
                 width: 320px;
             }
             span {
-                color: gray;
-                font-weight: 900;
-                font-size: 2rem;
+                color: rgb(170, 170, 170);
+                font-weight: 400;
+                font-style: italic;
+                font-size: 1.5rem;
             }
         }
         .nav-bottom-right {
             display: flex;
             align-items: center;
             i {
-                margin-right: 15px;
+                margin-right: 20px;
                 font-size: 2rem;
+                padding: 10px;
+                background-color: white;
+                border-radius: 15px;
+                border: 1px solid #dfdfdf;
+                color: #363636;
+                &:hover {
+                }
             }
         }
     }

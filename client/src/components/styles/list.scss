@@ -1,30 +1,61 @@
+@keyframes shakeItem {
+    //흔들림 효과
+    0% {
+        transform: rotate(5deg);
+    }
+    50% {
+        transform: rotate(-5deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
 .todo-list {
     list-style: none;
     width: 55%;
     margin: 0;
-
     padding: 0;
-    .todo-list-item {
+    .todo-list-item-box {
+        position: relative;
         margin-top: 15px;
-        height: 320px;
-        display: flex;
-        align-items: center;
-        justify-content: space-evenly;
-        font-size: 2.5rem;
-        color: #797979;
-        background-color: white;
-        border-radius: 15px;
-        border: 1px solid #f1ecec;
-        span {
-        }
-        .check-btn {
-            &:hover {
+        width: 100%;
+        padding-bottom: 30%;
+        &:hover {
+            transition: transform 0.2s ease-in-out;
+            transform: translateY(-10px);
+            .check-btn {
                 color: #81b9bf;
             }
         }
-        .remove-btn {
-            &:hover {
-                color: rgb(255, 107, 107);
+        &.completed {
+            animation-name: shakeItem;
+            animation-duration: 0.2s;
+            animation-timing-function: ease-in-out;
+            span {
+                text-decoration: line-through;
+            }
+            .todo-list-item {
+                color: #b4b4b4;
+            }
+        }
+
+        .todo-list-item {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            font-size: 2.5rem;
+            color: #797979;
+            background-color: white;
+            border-radius: 15px;
+            border: 1px solid #f1ecec;
+
+            .remove-btn {
+                &:hover {
+                    color: rgb(255, 107, 107);
+                }
             }
         }
     }
