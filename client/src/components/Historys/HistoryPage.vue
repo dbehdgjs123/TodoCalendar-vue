@@ -23,6 +23,9 @@ export default {
                 this.historyTodos.push(arr);
             }
         }
+        if (this.historyTodos.length) {
+            this.historyTodos = this.historyTodos.sort((a, b) => b[0] - a[0]);
+        }
     },
 };
 </script>

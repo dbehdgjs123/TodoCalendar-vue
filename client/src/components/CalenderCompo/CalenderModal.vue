@@ -1,18 +1,20 @@
 <template>
     <div class="calender-modal-container">
-        <div class="calender-modal-wrapper"></div>
+        <div class="calender-modal-wrapper" v-on:click="closeHandler"></div>
         <div class="calender-modal">
             <div class="calender-modal-left">
-                <div class="calender-today-title">Wednesday</div>
+                <div class="calender-today-title">{{ computedTodayEn }}</div>
                 <div class="calender-modal-left-bottom">
                     <div class="perform-title">
-                        <span>good</span>
+                        <span>{{ getRating }}</span>
                         <hr />
                     </div>
                     <ul>
-                        <li>-코딩하기</li>
-                        <li>-밥먹기</li>
-                        <li>-캘린더 다 만들기</li>
+                        <li v-for="(item, index) in computedHistory" v-bind:key="index">
+                            -{{ item.todoItem }}
+                            <i class="fas fa-check" v-if="item.isCompleted"></i>
+                            <i class="fas fa-times uncheck" v-else></i>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -24,12 +26,12 @@
                 </div>
                 <table>
                     <th v-for="day in days" v-bind:key="day">{{ day }}</th>
-                    <tr v-for="(week, index) in nowMonthDays" v-bind:key="index">
+                    <tr v-for="(week, parIndex) in nowMonthDays" v-bind:key="parIndex">
                         <td
                             v-for="(date, index) in week"
                             v-bind:key="index"
-                            v-bind:class="[{ sat: date.sat }, { sun: date.sun }, { today: date.today }]"
-                            v-on:click="dateClickHandler(index)"
+                            v-bind:class="[{ sat: date.sat }, { sun: date.sun }, { today: date.today }, { focusDate: date.focus }]"
+                            v-on:click="dateClickHandler({ parIndex, index })"
                         >
                             {{ date.day }}
                         </td>
@@ -46,7 +48,7 @@ export default {
         const allDate = new Date(); //현재 날짜 가져오기
         this.currentYear = allDate.getFullYear();
         this.currentMonth = allDate.getMonth() + 1;
-        this.currentDay = allDate.getDate(); //
+        this.currentDay = allDate.getDate();
         //next,prev 연산할때 -는 형변환이 일어나지만 +는 합쳐지기 때문에 creaction중에 넘버형으로 바꾼다.
         this.getLeapYear();
         this.getCalender(); //현재 달의 2차원 배열 캘린더 v-for로 돌림
@@ -59,8 +61,14 @@ export default {
             currentYear: 0,
             currentMonth: 0,
             currentDay: 0,
+
             isLeap: false,
             nowMonthDays: [],
+            prevFocus: {}, //전에 선택했던 포커스 알아내기
+            //modal left
+            todayEn: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], //영어 날짜 타이틀
+            currentTodo: [], //선책한 날짜의 todolist
+            score: "", //Bad,Noraml,Good,Noting => Noting은 아무것도 없는것
         };
     },
     computed: {
@@ -75,6 +83,47 @@ export default {
         computedNowFirstDay() {
             //현재 달의 첫번째 날을 계산한다.
             return new Date(this.currentYear, this.currentMonth - 1, 1).getDay(); //이번달의 첫번째 날 (인덱스로 계산하기 때문에 달에서 1 빼고 계산)
+        },
+        computedTodayEn() {
+            if (this.prevFocus.index >= 0) {
+                //값이 있을때만
+                return this.todayEn[this.prevFocus.index];
+            } else {
+                return null;
+            }
+        },
+        computedHistory() {
+            if (localStorage.length) {
+                for (let i = 0; i < localStorage.length; i++) {
+                    if (localStorage.key(i) !== "loglevel:webpack-dev-server" && localStorage.key(i) === this.Twodigits()) {
+                        //key값과 똑같은지 비교후 가져온다.
+                        return JSON.parse(localStorage.getItem(localStorage.key(i)));
+                    }
+                }
+            }
+            return null;
+        },
+        getRating() {
+            //한 일에 따라 점수로 변환
+            if (this.computedHistory) {
+                const score =
+                    (this.computedHistory.reduce((item, cur) => {
+                        //completed가 true면 누적값에 1을 더해주고 아니면 0을 더해준다.
+                        return cur.isCompleted ? item + 1 : item + 0;
+                    }, 0) /
+                        this.computedHistory.length) *
+                    100;
+                //console.log(score);
+                if (66.6 < score) {
+                    return "😁";
+                } else if (33.3 < score) {
+                    return "🙂";
+                } else {
+                    return "☹️";
+                }
+            } else {
+                return "😴";
+            }
         },
     },
     methods: {
@@ -100,11 +149,19 @@ export default {
                 this.getCalender();
             }
         },
-        dateClickHandler(index) {
-            //날짜 알아내기
-            console.log(index);
+        dateClickHandler(data) {
+            //배열의 인덱스는 무조건 길이가 7이므로 힌주와 동일하다.
+            //부모의 인덱스, 자식의 인덕스를 넣으면 어떤걸 클릭했는지 알 수있다.
+            const { parIndex, index } = data;
+            this.nowMonthDays[this.prevFocus.parIndex][this.prevFocus.index].focus = false;
+            this.nowMonthDays[parIndex][index].focus = true;
+            this.prevFocus = { parIndex, index }; //다음 버튼을 누르면 전에 누른값이 사라져야하므로 기억해놔야한다.
+        },
+        closeHandler() {
+            this.$emit("closeCalender");
         },
         getCalender() {
+            //캘린더 그리는 메서드
             const { computedNowFirstDay, nowDays } = this;
             let days = []; //주에 대한 배열
             let arr = []; //주의 날짜의 배열 (2차원)
@@ -113,15 +170,16 @@ export default {
                 //i가 첫번째 날보다 커졌을때 부터 넣기 시작하므로 맞춰주기 위해 그만큼 더해줘야한다.
                 if (i <= computedNowFirstDay) {
                     //현재 날짜 인덱스로 0부터 시작해서 "=" 까지 해줘야함
-                    arr.push({ day: null, sun: false, sat: false, today: false }); //i가 현재 달의 첫번째 날보다 작으면 그 블럭은 비워놔야하므로 null을 넣어준다.
+                    arr.push({ day: null, sun: false, sat: false, focus: false }); //i가 현재 달의 첫번째 날보다 작으면 그 블럭은 비워놔야하므로 null을 넣어준다.
                 } else {
-                    arr.push({ day, sun: false, sat: false, today: false }); //i가 더크다면 그때부터 날짜를 넣어준다.
+                    arr.push({ day, sun: false, sat: false, focus: false }); //i가 더크다면 그때부터 날짜를 넣어준다.
                     if (
                         this.$moment().format("YYYYMMDD") === `${this.currentYear}${this.currentMonth}${this.currentDay}` &&
                         this.currentDay === day
                     ) {
                         //현재 날짜와 data 날짜가 같고 현재 loop의 day와도 같다면 컬러를 다르게준다. loop를 모두 돌려 검사
-                        arr[arr.length - 1].today = true;
+                        this.prevFocus = { parIndex: days.length, index: arr.length - 1 }; //초기 데이는 현재로 초기화
+                        arr[arr.length - 1].focus = true;
                     }
                     if (day === nowDays && arr.length !== 7) {
                         //날짜가 현재달의 날짜와 같으면 마지막이다. 그러므로 length가 7이 되지 않아도 넣어줘야한다.
@@ -157,6 +215,19 @@ export default {
                 return (this.isLeap = true); //4년에 나누어 떨어지면 윤년
             } else {
                 return (this.isLeap = false); //아니면 평년
+            }
+        },
+        Twodigits() {
+            const { currentYear, currentMonth } = this;
+            //현재 일수는 두자리수로 내보낸다.
+            if (
+                this.nowMonthDays[this.prevFocus.parIndex][this.prevFocus.index].day &&
+                this.nowMonthDays[this.prevFocus.parIndex][this.prevFocus.index].day.length === 1
+            ) {
+                //한자리일때는 0 붙혀서 리턴
+                return `dbehdgjs123${currentYear}${currentMonth}0${this.nowMonthDays[this.prevFocus.parIndex][this.prevFocus.index].day}`;
+            } else {
+                return `dbehdgjs123${currentYear}${currentMonth}${this.nowMonthDays[this.prevFocus.parIndex][this.prevFocus.index].day}`;
             }
         },
     },

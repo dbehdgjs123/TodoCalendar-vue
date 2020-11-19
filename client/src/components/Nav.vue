@@ -4,12 +4,11 @@
         <div class="nav-bottom">
             <div class="nav-bottom-left">
                 <img src="../assets/todologo.png" alt="todolist" />
-                <span>{{ $moment(new Date()).format("-dddd, MMMM Do YYYY") }}</span>
             </div>
             <div class="nav-bottom-right">
                 <router-link to="/history"><i class="fas fa-history"></i></router-link>
                 <router-link to="/"><i class="fas fa-clipboard-list"></i></router-link>
-                <router-link to="/calender"><i class="fas fa-calendar-alt"></i></router-link>
+                <i class="fas fa-calendar-alt" v-on:click="calenderHandler"></i>
                 <a href="#"> <i class="fas fa-moon"></i></a>
             </div>
         </div>
@@ -18,7 +17,11 @@
 
 <script>
 export default {
-    created() {},
+    methods: {
+        calenderHandler() {
+            this.$emit("calenderClick");
+        },
+    },
 };
 </script>
 

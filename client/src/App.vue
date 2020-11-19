@@ -1,12 +1,12 @@
 <template>
     <div id="app">
         <header-vue />
-        <nav-vue />
+        <nav-vue v-on:calenderClick="calenderHandler" />
         <nav-scroll />
         <router-view v-bind:dataprops="todos" v-bind:userId="userId" v-on:complete="completeTodo" v-on:remove="removeTodo" />
         <a href="#" class="add-btn" v-on:click.prevent="modalHandler"><i class="fas fa-plus"></i></a>
         <add-modal v-if="showModal" v-on:close="modalHandler" v-on:add="addTodo" />
-        <calender-modal />
+        <calender-modal v-if="showCalender" v-on:closeCalender="calenderHandler" />
     </div>
 </template>
 <script>
@@ -25,8 +25,20 @@ export default {
                 this.historyTodos = JSON.parse(localStorage.getItem(localStorage.key(i)));
             } else if (!localStorage.key(i).includes(this.userId + "20") && localStorage.key(i) !== "loglevel:webpack-dev-server") {
                 //초기에 원래 있는 loglevel:webpack-dev-server 키값과, 유저아이디+20가 포함되지 않는 것만 불러온다.
-                this.todos.push(JSON.parse(localStorage.getItem(localStorage.key(i)))); //파싱해서 가져옴
+                if (!JSON.parse(localStorage.getItem(localStorage.key(i))).createdDate.includes(this.today)) {
+                    //생성된 날짜가 오늘이 포함되어 있지않으면 삭제한다.(현재 날짜의 todolist만 출력)
+                    localStorage.removeItem(localStorage.key(i));
+                } else {
+                    this.todos.push(JSON.parse(localStorage.getItem(localStorage.key(i)))); //파싱해서 가져옴
+                }
             }
+        }
+        if (this.todos.length) {
+            //todo목록을 날짜 오름차순으로 정렬
+            this.todos = this.todos.sort((a, b) => {
+                console.log(a, b);
+                return a.createdDate - b.createdDate;
+            });
         }
     },
     components: {
@@ -51,14 +63,14 @@ export default {
             this.showModal = !this.showModal;
         },
         calenderHandler() {
+            console.log("sss");
             this.showCalender = !this.showCalender;
         },
         addTodo(data) {
             //현재 todo 목록
-            const obj = { isCompleted: false, todoItem: data };
+            const obj = { isCompleted: false, todoItem: data, createdDate: this.$moment().format("YYYYMMDDHHmmss") };
             localStorage.setItem(data, JSON.stringify(obj));
             this.todos.push(obj); //배열에 객체 저장
-
             //history에도 저장해야 한다.
             //마찬가지로 배열에 넣고 localstorage의 키는 고유의키값을 가지도록 유저의 아이디+날짜로 해준다.
             this.historyTodos.push(obj);

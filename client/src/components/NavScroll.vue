@@ -3,7 +3,6 @@
         <div class="nav-bottom">
             <div class="nav-bottom-left">
                 <img src="../assets/todologo.png" alt="todolist" />
-                <span>-2020.11.16</span>
             </div>
             <div class="nav-bottom-right">
                 <a href="#"> <i class="fas fa-calendar-alt"></i></a>
