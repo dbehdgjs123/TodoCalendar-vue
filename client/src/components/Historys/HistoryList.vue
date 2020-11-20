@@ -1,6 +1,6 @@
 <template>
     <ul class="history-list">
-        <li class="history-list-item" v-for="(item, index) in propsdata" v-bind:key="item[index][0]">
+        <li class="history-list-item" v-for="item in propsdata" v-bind:key="item[0]">
             <div class="history-list-item-date">
                 <div class="date-days">{{ $moment(item[0]).format("DD") }}</div>
                 <div class="date">{{ $moment(item[0]).format("MMMM YYYY") }}</div>
@@ -18,12 +18,6 @@
 <script>
 export default {
     props: ["propsdata"],
-
-    data() {
-        return {
-            itemData: [],
-        };
-    },
     methods: {
         computedList(data) {
             // data : [날짜,{todo},{todo},{todo}]

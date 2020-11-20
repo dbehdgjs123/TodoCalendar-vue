@@ -2,48 +2,25 @@
     <div class="calender-modal-container">
         <div class="calender-modal-wrapper" v-on:click="closeHandler"></div>
         <div class="calender-modal">
-            <div class="calender-modal-left">
-                <div class="calender-today-title">{{ computedTodayEn }}</div>
-                <div class="calender-modal-left-bottom">
-                    <div class="perform-title">
-                        <span>{{ getRating }}</span>
-                        <hr />
-                    </div>
-                    <ul>
-                        <li v-for="(item, index) in computedHistory" v-bind:key="index">
-                            -{{ item.todoItem }}
-                            <i class="fas fa-check" v-if="item.isCompleted"></i>
-                            <i class="fas fa-times uncheck" v-else></i>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="calender-modal-right">
-                <div class="calender-current-year">
-                    <i class="fas fa-angle-left" v-on:click="prevBtnHandler"></i>
-                    <span>{{ `${currentYear}.${currentMonth}` }}</span>
-                    <i class="fas fa-angle-right" v-on:click="nextBtnHandler"></i>
-                </div>
-                <table>
-                    <th v-for="day in days" v-bind:key="day">{{ day }}</th>
-                    <tr v-for="(week, parIndex) in nowMonthDays" v-bind:key="parIndex">
-                        <td
-                            v-for="(date, index) in week"
-                            v-bind:key="index"
-                            v-bind:class="[{ sat: date.sat }, { sun: date.sun }, { today: date.today }, { focusDate: date.focus }]"
-                            v-on:click="dateClickHandler({ parIndex, index })"
-                        >
-                            {{ date.day }}
-                        </td>
-                    </tr>
-                </table>
-            </div>
+            <calender-left v-bind:rating="getRating" v-bind:history="computedHistory" v-bind:todayEn="computedTodayEn" />
+            <calender-right
+                v-bind:year="currentYear"
+                v-bind:month="currentMonth"
+                v-bind:weeks="nowMonthDays"
+                v-bind:days="days"
+                v-on:prev="prevBtnHandler"
+                v-on:next="nextBtnHandler"
+                v-on:dateClick="dateClickHandler"
+            />
         </div>
     </div>
 </template>
 
 <script>
+import CalenderLeft from "./CalenderLeft.vue";
+import CalenderRight from "./CalenderRight.vue";
 export default {
+    components: { CalenderLeft, CalenderRight },
     created() {
         const allDate = new Date(); //현재 날짜 가져오기
         this.currentYear = allDate.getFullYear();
@@ -55,15 +32,15 @@ export default {
     },
     data() {
         return {
+            //modal right
             days: ["일", "월", "화", "수", "목", "금", "토"],
             leapYear: [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31], //윤년
             normalYear: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31], //평년
             currentYear: 0,
             currentMonth: 0,
             currentDay: 0,
-
             isLeap: false,
-            nowMonthDays: [],
+            nowMonthDays: [], //주,일에 대한 2차원 배열, 1차: 주, 2차: 일
             prevFocus: {}, //전에 선택했던 포커스 알아내기
             //modal left
             todayEn: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], //영어 날짜 타이틀
@@ -85,6 +62,7 @@ export default {
             return new Date(this.currentYear, this.currentMonth - 1, 1).getDay(); //이번달의 첫번째 날 (인덱스로 계산하기 때문에 달에서 1 빼고 계산)
         },
         computedTodayEn() {
+            //영어 날짜로 변환
             if (this.prevFocus.index >= 0) {
                 //값이 있을때만
                 return this.todayEn[this.prevFocus.index];
@@ -152,6 +130,7 @@ export default {
         dateClickHandler(data) {
             //배열의 인덱스는 무조건 길이가 7이므로 힌주와 동일하다.
             //부모의 인덱스, 자식의 인덕스를 넣으면 어떤걸 클릭했는지 알 수있다.
+            console.log(data);
             const { parIndex, index } = data;
             this.nowMonthDays[this.prevFocus.parIndex][this.prevFocus.index].focus = false;
             this.nowMonthDays[parIndex][index].focus = true;
@@ -159,6 +138,32 @@ export default {
         },
         closeHandler() {
             this.$emit("closeCalender");
+        },
+
+        getLeapYear() {
+            const { currentYear } = this;
+            if (currentYear % 4 === 0 && currentYear % 100 === 0 && currentYear % 400 === 0) {
+                return (this.isLeap = true); //4,100,400년에 나누어 떨어지면 윤년
+            } else if (currentYear % 4 === 0 && currentYear % 100 === 0) {
+                return (this.isLeap = false); //4,100년에 나누어 떨어지면 평년
+            } else if (currentYear % 4 === 0) {
+                return (this.isLeap = true); //4년에 나누어 떨어지면 윤년
+            } else {
+                return (this.isLeap = false); //아니면 평년
+            }
+        },
+        Twodigits() {
+            const { currentYear, currentMonth } = this;
+            //현재 일수는 두자리수로 내보낸다.
+            if (
+                this.nowMonthDays[this.prevFocus.parIndex][this.prevFocus.index].day &&
+                this.nowMonthDays[this.prevFocus.parIndex][this.prevFocus.index].day.length === 1
+            ) {
+                //한자리일때는 0 붙혀서 리턴
+                return `dbehdgjs123${currentYear}${currentMonth}0${this.nowMonthDays[this.prevFocus.parIndex][this.prevFocus.index].day}`;
+            } else {
+                return `dbehdgjs123${currentYear}${currentMonth}${this.nowMonthDays[this.prevFocus.parIndex][this.prevFocus.index].day}`;
+            }
         },
         getCalender() {
             //캘린더 그리는 메서드
@@ -204,31 +209,6 @@ export default {
                 }
             }
             this.nowMonthDays = days;
-        },
-        getLeapYear() {
-            const { currentYear } = this;
-            if (currentYear % 4 === 0 && currentYear % 100 === 0 && currentYear % 400 === 0) {
-                return (this.isLeap = true); //4,100,400년에 나누어 떨어지면 윤년
-            } else if (currentYear % 4 === 0 && currentYear % 100 === 0) {
-                return (this.isLeap = false); //4,100년에 나누어 떨어지면 평년
-            } else if (currentYear % 4 === 0) {
-                return (this.isLeap = true); //4년에 나누어 떨어지면 윤년
-            } else {
-                return (this.isLeap = false); //아니면 평년
-            }
-        },
-        Twodigits() {
-            const { currentYear, currentMonth } = this;
-            //현재 일수는 두자리수로 내보낸다.
-            if (
-                this.nowMonthDays[this.prevFocus.parIndex][this.prevFocus.index].day &&
-                this.nowMonthDays[this.prevFocus.parIndex][this.prevFocus.index].day.length === 1
-            ) {
-                //한자리일때는 0 붙혀서 리턴
-                return `dbehdgjs123${currentYear}${currentMonth}0${this.nowMonthDays[this.prevFocus.parIndex][this.prevFocus.index].day}`;
-            } else {
-                return `dbehdgjs123${currentYear}${currentMonth}${this.nowMonthDays[this.prevFocus.parIndex][this.prevFocus.index].day}`;
-            }
         },
     },
 };

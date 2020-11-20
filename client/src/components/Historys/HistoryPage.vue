@@ -24,7 +24,11 @@ export default {
             }
         }
         if (this.historyTodos.length) {
-            this.historyTodos = this.historyTodos.sort((a, b) => b[0] - a[0]);
+            console.log(this.historyTodos);
+            this.historyTodos = this.historyTodos.sort((a, b) => {
+                console.log(a[0], b[0]);
+                return b[0] - a[0];
+            });
         }
     },
 };

@@ -36,7 +36,6 @@ export default {
         if (this.todos.length) {
             //todo목록을 날짜 오름차순으로 정렬
             this.todos = this.todos.sort((a, b) => {
-                console.log(a, b);
                 return a.createdDate - b.createdDate;
             });
         }
@@ -78,9 +77,10 @@ export default {
         },
         completeTodo(item, index) {
             console.log(item, index); //완료 {item: 객체, index: 배열 순서}
+            console.log(this.todos[index].isCompleted);
             this.todos[index].isCompleted = !this.todos[index].isCompleted;
             localStorage.setItem(this.todos[index].todoItem, JSON.stringify(this.todos[index])); //json 형태로 저장
-
+            console.log(this.todos[index].isCompleted);
             //history의 배열에서도 바꿔준다.
             this.historyTodos[index].isCompleted = !this.historyTodos[index].isCompleted;
             localStorage.setItem(this.userId + this.today, JSON.stringify(this.historyTodos));

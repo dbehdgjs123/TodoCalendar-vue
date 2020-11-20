@@ -1,0 +1,45 @@
+.calender-modal-right {
+    width: 50%;
+    background-color: #9cdde4;
+    border-radius: 0px 15px 15px 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    .calender-current-year {
+        font-size: 2rem;
+        color: #363636;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 200px;
+        span {
+            margin: 0px 5px 0px 5px;
+        }
+    }
+    table {
+        width: 95%;
+        height: 370px;
+
+        th {
+            font-size: 1.75rem;
+        }
+        td {
+            font-size: 1.5rem;
+            border-radius: 50%;
+            text-align: center;
+            cursor: pointer;
+            &.sat {
+                color: rgb(112, 112, 214);
+            }
+            &.sun {
+                color: rgb(245, 126, 126);
+            }
+
+            &.focusDate {
+                background-color: pink;
+                color: white;
+            }
+        }
+    }
+}
