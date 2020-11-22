@@ -1,3 +1,4 @@
+@import "./global-color.scss";
 .modal-container {
     width: 100%;
     height: 100%;
@@ -20,7 +21,7 @@
         transform: translate(-50%, -50%);
         background-color: white;
         border-radius: 5px;
-        border: 1px solid #d6d6d6;
+        border: 1px solid $bgray;
         width: 680px;
         height: 340px;
         .modal-title {
@@ -39,7 +40,7 @@
                 justify-content: space-between;
                 input {
                     width: 80%;
-                    border: 1px solid #a3a3a3;
+                    border: 1px solid $bgray;
                     border-radius: 5px;
                     font-size: 1rem;
                 }
@@ -50,9 +51,9 @@
                     width: 60px;
                     height: 60px;
                     color: white;
-                    background-color: #81b9bf;
+                    background-color: $green;
                     border-radius: 50%;
-                    border: 1px solid #73acb3;
+                    border: 1px solid $lgreen;
                     font-size: 2rem;
                 }
             }

@@ -1,7 +1,7 @@
 <template>
     <header>
         <div class="header-logo-box">
-            <img src="../assets/alramlogo.jpg" alt="logo" class="logo-img" />
+            <!--<img src="../assets/alramlogo.jpg" alt="logo" class="logo-img" />-->
         </div>
     </header>
 </template>

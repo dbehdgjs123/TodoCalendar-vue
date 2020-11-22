@@ -1,3 +1,4 @@
+@import "./global-color.scss";
 .history-list {
     list-style: none;
     margin: 0;
@@ -6,7 +7,7 @@
     .history-list-item {
         padding: 20px;
         width: 100%;
-        color: #686868;
+        color: $dgray;
         margin-top: 15px;
         .history-list-item-date {
             font-size: 2rem;
@@ -15,7 +16,7 @@
             align-items: center;
             .date-days {
                 padding: 10px;
-                background-color: #81b9bf;
+                background-color: $lgreen;
                 border-radius: 15px;
                 color: white;
             }
@@ -26,14 +27,14 @@
             }
         }
         hr {
-            border: 1px solid rgb(209, 209, 209);
+            border: 1px solid $bgray;
         }
         .history-list-item-todo {
             margin-left: 15px;
             font-size: 1.4rem;
             i {
                 margin-left: 5px;
-                color: #81b9bf;
+                color: $lgreen;
             }
             .uncheck {
                 color: rgb(218, 90, 90);

@@ -5,9 +5,9 @@
                 <img src="../assets/todologo.png" alt="todolist" />
             </div>
             <div class="nav-bottom-right">
-                <a href="#"> <i class="fas fa-calendar-alt"></i></a>
-                <a href="#"> <i class="fas fa-clipboard-list"></i></a>
-                <a href="#"> <i class="fas fa-moon"></i></a>
+                <router-link to="/history"><i class="fas fa-history"></i></router-link>
+                <router-link to="/"><i class="fas fa-clipboard-list"></i></router-link>
+                <i class="fas fa-calendar-alt" v-on:click="calenderHandler"></i>
             </div>
         </div>
     </nav>
@@ -32,6 +32,9 @@ export default {
                 this.active = false;
                 this.yHeight = yOffset;
             }
+        },
+        calenderHandler() {
+            this.$emit("calenderClick");
         },
     },
     created() {

@@ -7,24 +7,31 @@
 <script>
 import HistoryList from "./HistoryList.vue";
 export default {
+    //todo 페이지처럼 이벤트버스가 많아지거나 수정할 데이터가 없어서 스토어엔 넣지 않았다.
     components: { HistoryList },
-    props: ["userId"],
     data() {
         return {
             historyTodos: [],
         };
     },
     created() {
+        console.log(this.$store);
         for (let i = 0; i < localStorage.length; i++) {
-            if (localStorage.key(i).includes(this.userId + "20") && localStorage.key(i) !== "loglevel:webpack-dev-server") {
-                //리스트와 반대로 유저아이디+20의키를 전부 가져온다.
+            if (
+                localStorage.key(i).includes(this.$store.getters.rootUser + this.$store.getters.rootKey) &&
+                localStorage.key(i) !== "loglevel:webpack-dev-server"
+            ) {
+                //리스트와 반대로 유저아이디+고유키를 전부 가져온다.
                 //유저 아이디 제거후 날짜만 추출후 배열에 push
-                const arr = [localStorage.key(i).replace(this.userId, ""), ...JSON.parse(localStorage.getItem(localStorage.key(i)))];
+                const arr = [
+                    localStorage.key(i).replace(this.$store.getters.rootUser + this.$store.getters.rootKey, ""),
+                    ...JSON.parse(localStorage.getItem(localStorage.key(i))),
+                ];
                 this.historyTodos.push(arr);
             }
         }
         if (this.historyTodos.length) {
-            console.log(this.historyTodos);
+            //가져온 데이터들을 내림차순으로 정렬한다.
             this.historyTodos = this.historyTodos.sort((a, b) => {
                 console.log(a[0], b[0]);
                 return b[0] - a[0];

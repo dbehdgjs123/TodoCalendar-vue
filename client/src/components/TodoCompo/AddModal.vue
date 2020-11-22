@@ -16,6 +16,12 @@
 
 <script>
 export default {
+    data() {
+        return {
+            todoInput: "",
+            isEmpty: false,
+        };
+    },
     methods: {
         closeHandler() {
             this.$emit("close");
@@ -25,15 +31,9 @@ export default {
                 //비었을떄의 조건부 렌더링
                 return (this.isEmpty = true);
             }
-            this.$emit("add", this.todoInput);
+            this.$store.commit("addTodo", this.todoInput);
             this.todoInput = "";
         },
-    },
-    data() {
-        return {
-            todoInput: "",
-            isEmpty: false,
-        };
     },
 };
 </script>
