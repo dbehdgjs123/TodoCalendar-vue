@@ -43,18 +43,14 @@ const todoStore = {
             //history는 localstorage의 키는 고유의키값을 가지도록 유저의 아이디+고유키+날짜로 해준다.
         },
         completeTodo(state, payload) {
-            const { index } = payload;
-            console.log(index); //완료 {item: 객체, index: 배열 순서}
-            console.log(state.todos[index].isCompleted);
+            const { index } = payload; //완료 {item: 객체, index: 배열 순서}
             state.todos[index].isCompleted = !state.todos[index].isCompleted;
             localStorage.setItem(state.todos[index].todoItem, JSON.stringify(state.todos[index])); //json 형태로 저장
-            console.log(state.todos[index].isCompleted);
             //history의 배열에서도 바꿔준다.
             localStorage.setItem(this.getters.rootUser + this.getters.rootKey + state.today, JSON.stringify(state.todos));
         },
         removeTodo(state, payload) {
-            const { item, index } = payload;
-            console.log(item, index); //삭제
+            const { item, index } = payload; //삭제 
             localStorage.removeItem(item.todoItem);
             state.todos.splice(index, 1); //인덱스에 해당하는 속성 하나 제거
             //history도 바꿔준다.
