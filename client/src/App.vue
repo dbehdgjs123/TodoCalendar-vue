@@ -1,15 +1,16 @@
 <template>
     <div id="app">
-        <header-vue />
-        <nav-vue v-on:calenderClick="calenderHandler" />
-        <nav-scroll />
+        <header-vue v-if="!isLoginPage" />
+        <nav-vue v-on:calenderClick="calenderHandler" v-if="!isLoginPage" />
+        <nav-scroll v-if="!isLoginPage" />
         <router-view />
-        <a href="#" class="add-btn" v-on:click.prevent="modalHandler"><i class="fas fa-plus"></i></a>
+        <a href="#" class="add-btn" v-on:click.prevent="modalHandler" v-if="!isLoginPage"><i class="fas fa-plus"></i></a>
         <add-modal v-if="showModal" v-on:close="modalHandler" />
         <calender-modal v-if="showCalender" v-on:closeCalender="calenderHandler" />
     </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 import CalenderModal from "./components/CalenderCompo/CalenderModal.vue";
 import HeaderVue from "./components/Header.vue";
 import NavVue from "./components/Nav.vue";
@@ -17,8 +18,9 @@ import NavScroll from "./components/NavScroll.vue";
 import AddModal from "./components/TodoCompo/AddModal.vue";
 
 export default {
-    created() {
-        this.$store.commit("getTodos");
+    mounted() {
+        console.log("mounted");
+        this.$route.path === "/login" ? (this.isLoginPage = true) : (this.isLoginPage = false);
     },
     components: {
         HeaderVue,
@@ -31,6 +33,7 @@ export default {
         return {
             showModal: false, //모달창
             showCalender: false, //캘린더 모달창
+            isLoginPage: false, //로그인페이지일때 보여줄 컴포넌트 제한
         };
     },
     methods: {
@@ -40,6 +43,9 @@ export default {
         calenderHandler() {
             this.showCalender = !this.showCalender;
         },
+    },
+    computed: {
+        ...mapGetters(["rootUser", "rootKey"]),
     },
 };
 </script>
@@ -56,7 +62,7 @@ body {
     margin: 0;
     padding: 0;
     height: 100%;
-    background-color: #eef5ef;
+    background-color: #f0f0f0;
 }
 a {
     color: black;

@@ -1,6 +1,6 @@
 const userStore = {
     state: {
-        userId: "dbehdgjs123",
+        userId: "",
         uniqueKey: "ydh",
     },
     mutations: {},

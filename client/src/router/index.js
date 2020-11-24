@@ -4,6 +4,7 @@ import VueRouter from "vue-router";
 //import Calender from "../components/CalenderPage.vue"
 import TodoPage from "../components/TodoCompo/TodoPage.vue"
 import HistoryPage from "../components/Historys/HistoryPage.vue"
+import LoginPage from "../components/UserCompo/LoginPage.vue"
 
 Vue.use(VueRouter);
 
@@ -15,6 +16,10 @@ const routes = [
   {
     path: "/history",
     component: HistoryPage
+  },
+  {
+    path: "/login",
+    component: LoginPage
   },
 ];
 
