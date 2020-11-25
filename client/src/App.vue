@@ -1,10 +1,12 @@
 <template>
     <div id="app">
-        <header-vue v-if="!isLoginPage" />
-        <nav-vue v-on:calenderClick="calenderHandler" v-if="!isLoginPage" />
-        <nav-scroll v-if="!isLoginPage" />
+        <header-vue />
+        <nav-vue v-on:calenderClick="calenderHandler" />
+        <nav-scroll />
         <router-view />
-        <a href="#" class="add-btn" v-on:click.prevent="modalHandler" v-if="!isLoginPage"><i class="fas fa-plus"></i></a>
+        <a href="#" class="add-btn" v-on:click.prevent="modalHandler" v-if="$route.path !== '/login' && $route.path !== '/signup'"
+            ><i class="fas fa-plus"></i
+        ></a>
         <add-modal v-if="showModal" v-on:close="modalHandler" />
         <calender-modal v-if="showCalender" v-on:closeCalender="calenderHandler" />
     </div>
@@ -18,10 +20,6 @@ import NavScroll from "./components/NavScroll.vue";
 import AddModal from "./components/TodoCompo/AddModal.vue";
 
 export default {
-    mounted() {
-        console.log("mounted");
-        this.$route.path === "/login" ? (this.isLoginPage = true) : (this.isLoginPage = false);
-    },
     components: {
         HeaderVue,
         NavVue,
@@ -33,7 +31,6 @@ export default {
         return {
             showModal: false, //모달창
             showCalender: false, //캘린더 모달창
-            isLoginPage: false, //로그인페이지일때 보여줄 컴포넌트 제한
         };
     },
     methods: {

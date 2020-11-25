@@ -4,10 +4,14 @@ const todoStore = {
     state: {
         todos: [],
         today: "",
+        isFirst: false,
     },
     mutations: {
         getTodos(state) {
-            state.today = Vue.moment().format("YYYYMMDD"); //재사용을 위해 데이터에 담았다.
+            if(!state.isFirst) {
+                //전역상태라 계속 누적된다. 처음일때만 해주도록 해야함.
+                state.isFirst = true
+                state.today = Vue.moment().format("YYYYMMDD"); //재사용을 위해 데이터에 담았다.
             for (let i = 0; i < localStorage.length; i++) {
                 if (!localStorage.key(i).includes(this.getters.rootKey) && localStorage.key(i) !== "loglevel:webpack-dev-server") {
                     //초기에 원래 있는 loglevel:webpack-dev-server 키값과, 유니크키가 포함되지 않는 것만 불러온다.
@@ -28,6 +32,8 @@ const todoStore = {
                     return a.createdDate - b.createdDate;
                 });
             }
+            }
+            
         },
         addTodo(state, data) {
             const obj = {

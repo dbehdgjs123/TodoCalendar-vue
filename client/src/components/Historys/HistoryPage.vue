@@ -19,7 +19,6 @@ export default {
         ...mapGetters(["rootUser", "rootKey"]),
     },
     created() {
-        console.log(this.$store);
         for (let i = 0; i < localStorage.length; i++) {
             if (localStorage.key(i).includes(this.rootUser + this.rootKey) && localStorage.key(i) !== "loglevel:webpack-dev-server") {
                 //리스트와 반대로 유저아이디+고유키를 전부 가져온다.
@@ -34,7 +33,6 @@ export default {
         if (this.historyTodos.length) {
             //가져온 데이터들을 내림차순으로 정렬한다.
             this.historyTodos = this.historyTodos.sort((a, b) => {
-                console.log(a[0], b[0]);
                 return b[0] - a[0];
             });
         }

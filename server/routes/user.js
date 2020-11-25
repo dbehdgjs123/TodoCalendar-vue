@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const rounds = 10; //암호 자릿수
 //커넥션 설정
 const pool = require("../config/pool"); //pool을 가져온다.
+const auth = require("../middleware/auth");
 router.post("/login", async (req, res) => {
     //로그인
     const sql = "SELECT user_no,user_password FROM user WHERE user_id = ?";
@@ -30,6 +31,7 @@ router.post("/login", async (req, res) => {
             );
             // 쿠키저장
             res.cookie("user",token);
+            console.log(token)
             res.json({ success: true, result: token });
           } else {
             res.json({
@@ -60,7 +62,6 @@ router.post("/login", async (req, res) => {
     //회원가입
     const sqlId = "SELECT user_id FROM user WHERE user_id = ?";
     const sqlCreate = "INSERT INTO user values (null,?,?)";
-      
     const { id, password } = req.body;
     try {
       const dbId = await pool.query(sqlId, [id]);
@@ -75,6 +76,18 @@ router.post("/login", async (req, res) => {
     } catch (err) {
       throw err;
     }
+  });
+
+  router.get("/auth", auth, (req, res) => {
+    //페이지간 인증구현
+    //미들웨어에서 받아온 정보 전달
+    console.log(req.token)
+    res.json({
+      id: req.user.user_id,
+      no: req.user.user_no,
+      token: req.token,
+      success: true
+    });
   });
   
   module.exports = router;
