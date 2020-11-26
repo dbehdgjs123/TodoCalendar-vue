@@ -81,7 +81,6 @@ router.post("/login", async (req, res) => {
   router.get("/auth", auth, (req, res) => {
     //페이지간 인증구현
     //미들웨어에서 받아온 정보 전달
-    console.log(req.token)
     res.json({
       id: req.user.user_id,
       no: req.user.user_no,

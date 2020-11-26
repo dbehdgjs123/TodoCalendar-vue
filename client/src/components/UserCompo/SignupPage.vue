@@ -4,9 +4,9 @@
             SIGN UP
         </div>
         <div class="signup-box">
-            <input type="text" v-model="userId" />
+            <input type="text" v-model="userId" placeholder="ID(최소 8글자)" />
             <div class="error-text" v-if="wrongId">아이디는 최소 8글자입니다.</div>
-            <input type="password" class="password" v-model="userPassword" />
+            <input type="password" class="password" v-model="userPassword" placeholder="PASSWORD(최소 8글자)" />
             <div class="error-text" v-if="wrongPassword">비밀번호는 최소 8글자입니다.</div>
             <button v-on:click="onSignupHandler">회원가입</button>
         </div>

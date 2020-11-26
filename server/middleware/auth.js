@@ -13,7 +13,6 @@ const auth = (req, res, next) => {
     jwt.verify(token, jwtKey.secret, async function (err, decoded) {
       try {
         const [result] = await pool.query(sql, [decoded.userNo]);
-        console.log(result[0])
         req.user = result[0]; //req에 넣어서 다음 미들웨어에게 전달
         req.token = token;
         next();

@@ -23,7 +23,7 @@ const userStore = {
             window.location.href = "/login";
         },
         onAuthComplete(state,payload) {
-            //인증에 성공하면 state에 아이디,넘버,토큰과 같은 정보들을 넣어준다.
+            //인증에 성공하면 state에 아이디,넘버,토큰 정보를 넣어준다.
             const {id,no,token} = payload
             state.userNo = no;
             state.userId = id;
@@ -33,7 +33,8 @@ const userStore = {
     actions: {
         onSignupHandler({commit},data) {
             //회원가입 핸들러
-            axios.post("/api/users/signup",{id: data.id, password: data.password})
+            const {id,password} = data;
+            axios.post("/api/users/signup",{id, password})
             .then(res => {
                 if(res.data.success) {
                     commit("onSignupComplete");
@@ -45,7 +46,8 @@ const userStore = {
         },
         onLoginHandler({commit},data) {
             //로그인 핸들러
-            axios.post("/api/users/login",{id: data.id, password: data.password})
+            const {id,password} = data;
+            axios.post("/api/users/login",{id, password})
             .then(res => {
                 if(res.data.success) {
                     commit("onLoginComplete");

@@ -32,8 +32,6 @@ export default {
         this.currentYear = allDate.getFullYear();
         this.currentMonth = allDate.getMonth() + 1;
         this.currentDay = allDate.getDate();
-        this.prevMonth = this.currentMonth;
-        //next,prev 연산할때 -는 형변환이 일어나지만 +는 합쳐지기 때문에 creaction중에 넘버형으로 바꾼다.
         this.getLeapYear();
         this.getCalender(); //현재 달의 2차원 배열 캘린더 v-for로 돌림
     },
@@ -49,7 +47,6 @@ export default {
             isLeap: false,
             nowMonthDays: [], //주,일에 대한 2차원 배열, 1차: 주, 2차: 일
             prevFocus: {}, //전에 선택했던 포커스 알아내기
-            prevMonth: 0, //전에 선택했던 날짜
             //modal left
             todayEn: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], //영어 날짜 타이틀
             currentTodo: [], //선택한 날짜의 todolist
@@ -115,16 +112,14 @@ export default {
     },
     methods: {
         nextBtnHandler() {
-            this.prevFocus = { index: 0, parIndex: 0 }; //history를 불러올때 날짜가 안맞으면 에러가 나므로 0으로 초기화해놓는다.
+            this.prevFocus = { index: 0, parIndex: 0 }; //history를 불러올때 날짜가 안맞으면(매달 말 일) 에러가 나므로 0으로 초기화해놓는다.
             if (this.currentMonth === 12) {
                 this.currentMonth = 1; // 12월은 끝달이므로 1월로 초기화
                 this.currentYear += 1; // 년도는 1 추가
-                this.prevMonth = 12; //직전 월 갱신
                 this.getLeapYear(); //윤년 계산
                 this.getCalender();
             } else {
                 this.currentMonth += 1;
-                this.prevMonth = this.currentMonth - 1;
                 this.getCalender();
             }
         },
@@ -133,12 +128,10 @@ export default {
             if (this.currentMonth === 1) {
                 this.currentMonth = 12; // 1월은 초달이므로 12월 할당
                 this.currentYear -= 1; // 년도는 1 감소
-                this.prevMonth = 1;
                 this.getLeapYear();
                 this.getCalender();
             } else {
                 this.currentMonth -= 1;
-                this.prevMonth = this.currentMonth + 1;
                 this.getCalender();
             }
         },
@@ -209,8 +202,8 @@ export default {
                     arr.push({ day, sun: false, sat: false, focus: false }); //i가 더크다면 그때부터 날짜를 넣어준다.
                     if (this.$moment().format("YYYYMMDD") === this.computedFullYear && this.currentDay === day) {
                         //현재 날짜와 data 날짜가 같고 현재 loop의 day와도 같다면 컬러를 다르게준다. loop를 모두 돌려 검사
-                        this.prevFocus = { parIndex: days.length, index: arr.length - 1 }; //초기 데이는 현재로 초기화
                         arr[arr.length - 1].focus = true;
+                        this.prevFocus = { parIndex: days.length, index: arr.length - 1 }; //초기 데이는 현재로 초기화
                         this.nowDay = { num: arr[arr.length - 1].day, en: arr.length - 1 };
                     }
                     if (day === nowDays && arr.length) {

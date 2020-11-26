@@ -4,15 +4,14 @@
         <nav-vue v-on:calenderClick="calenderHandler" />
         <nav-scroll />
         <router-view />
+        <add-modal v-if="showModal" v-on:close="modalHandler" />
+        <calender-modal v-if="showCalender" v-on:closeCalender="calenderHandler" />
         <a href="#" class="add-btn" v-on:click.prevent="modalHandler" v-if="$route.path !== '/login' && $route.path !== '/signup'"
             ><i class="fas fa-plus"></i
         ></a>
-        <add-modal v-if="showModal" v-on:close="modalHandler" />
-        <calender-modal v-if="showCalender" v-on:closeCalender="calenderHandler" />
     </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
 import CalenderModal from "./components/CalenderCompo/CalenderModal.vue";
 import HeaderVue from "./components/Header.vue";
 import NavVue from "./components/Nav.vue";
@@ -40,9 +39,6 @@ export default {
         calenderHandler() {
             this.showCalender = !this.showCalender;
         },
-    },
-    computed: {
-        ...mapGetters(["rootUser", "rootKey"]),
     },
 };
 </script>
