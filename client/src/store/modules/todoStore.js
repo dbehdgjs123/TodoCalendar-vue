@@ -44,7 +44,7 @@ const todoStore = {
                 return alert("이미 있는 항목입니다.");
             }
             state.todos.push(obj); //배열에 객체 저장
-            localStorage.setItem(this.getters.rootItemKey + data, JSON.stringify(obj)); //key+data로 저장(다른 아이디와 중복방지) 
+            localStorage.setItem(this.getters.rootItemKey + data, JSON.stringify(obj)); //key+data로 저장(다른 아이디와 중복방지 key가 중복되면 아이템이 곂친다.) 
             localStorage.setItem(this.getters.rootUser + this.getters.rootKey + state.today, JSON.stringify(state.todos));
             //history는 localstorage의 키는 고유의키값을 가지도록 유저의 아이디+고유키+날짜로 해준다.
         },
@@ -57,7 +57,7 @@ const todoStore = {
         removeTodo(state, payload) {
             const { item, index } = payload; //삭제 
             state.todos.splice(index, 1); //인덱스에 해당하는 속성 하나 제거
-            localStorage.removeItem(this.rootItemKey + item.todoItem);
+            localStorage.removeItem(this.getters.rootItemKey + item.todoItem);
             localStorage.setItem(this.getters.rootUser + this.getters.rootKey + state.today, JSON.stringify(state.todos));
         },
     },
